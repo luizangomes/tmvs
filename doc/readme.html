@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Tiny Machine Visual Simulator</title>
+<link href="twoColElsLt.css" rel="stylesheet" type="text/css" />
+<!--[if IE]>
+<style type="text/css">
+/* place css fixes for all versions of IE in this conditional comment */
+.twoColElsLt #sidebar1 { padding-top: 30px; }
+.twoColElsLt #mainContent { zoom: 1; padding-top: 15px; }
+/* the above proprietary zoom property gives IE the hasLayout it needs to avoid several bugs */
+</style>
+<![endif]-->
+<STYLE TYPE="text/css">
+<!--
+.indented
+   {
+   padding-left: 50pt;
+   padding-right: 50pt;
+   }
+-->
+</STYLE>
+</head>
+
+<body class="twoColElsLt">
+
+<div id="container">
+  <div id="mainContent">
+        <h1>Tiny Machine Visual Simulator</h1>
+
+        <p>This tool provides a visual insight to the workings of the Tiny Machine[<a href="#references">1</a>]. The primary function is to help debug the code generation phase of a compiler that targets the Tiny Machine as its back-end. Although the simulator can execute generic programs written for the Tiny Machine, it is designed to be most useful when used with the stack based run-time environment described in [<a href="#references">1</a>].</p>
+	
+	<p><img src="tmvs.png" width="850"/></p>
+	
+	<p>The Tiny Machine (TM) executes in a sequence of steps, each step corresponds to the execution of a single machine instruction. This simulator allows the user to step forwards and backwards through program execution using the control area of the GUI. Associated with each step is a machine state which is displayed to the user via the register, data memory and instruction memory areas. In addition, a log of all IO activity is recorded.</p>
+	
+	<h3>Acknowledgment</h3>
+	
+	<p>The Tiny Machine is described by Kenneth C. Louden in Compiler Construction - Principles and Practice [<a href="#references">1</a>]. A command line based simulator for the TM is available from the book's website.</p>
+
+	<h3>Download, Compile & Run</h3>
+	
+	<p>Download the release here: <a href="tmvs-0.11.zip">tmvs-0.11.zip</a></p>
+	
+	<p>The simulator is written in Haskell and distributed as source. It should be compiled using ghc by executing the following command in the root directory of the distribution:</p>
+
+        <P CLASS="indented"><FONT FACE="courier">ghc --make tmvs.hs</FONT></p>
+	
+	<p>In addition to ghc, the following items are required. If you use ubuntu these can be found through the software center - the package name follows each item.
+
+	<UL>
+	<LI><a href="http://www.gtk.org/">GKT+ toolkit</a> (libgtk2.0-0)
+        <LI><a href="http://www.haskell.org/haskellwiki/Gtk2Hs">Gtk2Hs bindings</a> (libghc6-gtk-dev)
+        <LI>Text.Regex module for ghc (libghc6-regex-compat-dev)
+        </UL></p>
+	
+	<p>To start the simulator with a program <FONT FACE="courier">test.tm</FONT> with a data memory of size X, execute the following command:</p>
+
+        <P CLASS="indented"><FONT FACE="courier">tmvs test.tm X</FONT></p>
+	
+	<h4>Format of a TM file</h4>
+	
+	The simulator expects files to be in the format described in [<a href="#references">1</a>] and is the same as that used in the command line TM simulator. An exception to this is that the address-labeled machine instructions may appear in any order in the TM files Louden describes (to facilitate backpatching in code generation). However, this simulator expects files with machine instructions that appear in order of memory address. You can check the instruction memory area of the simulator to ensure your file has been read correctly.
+	
+	<h3>Detailed Description</h3>
+
+	<h4>Initial state</h4>
+	
+	<p>At startup the maximum address of data memory is placed into data memory location 0. This value can then be read by your program to find the size of data memory available to the machine.</p>
+	
+	<h4>Control</h4>
+	
+	<p>The control area allows the user to step forward and back through the execution of the program. A single step of the simulator corresponds to executing the machine instruction pointed to by the current value of the program counter (pc) register. This is set to 0 initially and thus execution proceeds by processing the instruction in instruction memory location 0.</p>
+	
+	<p>The buttons step and back1 perform single steps forward or back. The button backX rewinds X steps of the program's execution where X is the user defined value in the box below (default 10). In addition to restoring the state of an earlier step, all input and output performed during the last X steps is removed. If X is greater than the current step number, then step is set to 0 effectively resetting the machine. The stepX button performs X steps forwards. However, if an input is requested during the execution of the X steps then execution stops so the user can enter a value and does not automatically resume. Finally, the stepEnd button will execute a program to its conclusion (i.e. it stops executing at a HALT instruction). The same behavior as stepX applies if user input is requested.</p>
+	
+	<p>Below the control buttons is an indicator displaying the current step number and the step result. The step result is used by the TM to relate information back to the environment. The default result of a TM step is TMokay indicating that the instruction executed successfully. Other possible step results are as follows:</p>
+	
+	<UL>
+	<LI><b>TMhalt:</b> The instruction just executed was a HALT instruction.
+	<LI><b>TMinputReq R:</b> The TM requests user input which will be placed into register R. A dialog box pops up requesting the input from the user.
+	<LI><b>TMoutput X:</b> The TM outputs value X.
+	<LI><b>TMiMemError A:</b> The TM has tried to access address A of instruction memory which is outside the range of valid addresses.
+	<LI><b>TMdMemError A:</b> The TM has tried to access address A of data memory which is outside the range of valid addresses.
+	<LI><b>TMzeroDivide:</b> The TM has tried to divide by zero.
+	</UL>
+	
+	<p>In case of a TMhalt or error state (TMiMemError, TMdMemError or TMzeroDivide) the machine halts and further execution is not possible. The step forward buttons are unavailable but the user can step backwards to investigate the cause of the problem. The machine state does not change when an error is encountered (e.g. the program counter does not advance).</p>
+		
+	<p>When an IO operation is the result of a step then this is recorded in the IO log. </p>
+	
+	<h4>Registers</h4>
+	
+	<p>The value stored in each register is displayed here. Abbreviations are used for registers that are assigned a specific purpose:
+	
+	<UL>
+	<LI><b>ac:</b> Accumulator
+	<LI><b>ac1:</b> Secondary accumulator
+	<LI><b>fp:</b> Frame pointer
+	<LI><b>gp:</b> Global pointer
+	<LI><b>pc:</b> Program counter
+	</UL>
+	
+	</p>
+	
+	<h4>IO Log</h4>
+	
+	<p>A record of each IO operation is stored here. Input operations are stored using the following syntax:
+	
+	<UL>
+	<LI>S: IN: val X -> reg R
+	</UL>
+	
+	where S is the step on which this operation was performed, X is the value entered by the user and R is the register into which X was stored. </p>
+	
+	<p>Output operations are as follows:
+	
+	<UL>
+	<LI>S: OUT: X
+	</UL>
+	
+	where S is the step and X is the emitted value.</p>
+	
+	<p>The user can copy from this area to take a copy of the log. This can help recreate states in programs which were the result of user entered data.</p>
+	
+	<h4>Data Memory</h4>
+	
+	<p>This area displays the data memory (dmem) of the TM. It is presented in reverse order as this area contains the stack which grows downwards in memory. If there are global variables in the program then these appear above the stack at the top of memory. Therefore, the global pointer always points to the top of dmem.</p>
+	
+	<p>The first column indicates the memory address of this record and the second column shows the value stored at this address. The roles of the third and fourth columns are discussed later.</p>
+	
+	<p>The arrow on the left of data memory indicates the record pointed to by the frame pointer (fp). By checking the "Follow FP" box in this part of the GUI, the scrolled window will center on the memory record pointed to by the current value of the frame pointer.</p>
+	
+	<p>A mechanism to automatically display information beside a record of data memory is available. The intended use of this mechanism is to allow a user to attribute a stack frame with details of what each memory location means. This could be used to indicate, for example, which record stores the return address, the control link or a local variable. Here is an example of this mechanism in use:</p>
+	
+        <p><img src="stackframe.png"/></p>
+	
+	<p>As can be seen in the above image, the third column is used to display the name of the function that performed the ST operation and the fourth column is used to display the specific role of that memory record. In this case, the caller <FONT FACE="courier">main</FONT> is responsible for setting the control link and computing the augments, while the callee  <FONT FACE="courier">gcd</FONT> only stores the return address.</p>
+	
+	<p>The simulator is informed of where and when to display this information by processing the comment of a ST machine instruction (ST machine instructions are the only instructions that affect data memory). The pattern of information to be displayed is as follows:
+	
+	<UL>
+	<LI>14:    ST  0,     -1(5) store return --THIRDCOL--FOURTHCOL--
+	</UL>	
+	
+	and here is a concrete example:
+	
+	<UL>
+	<LI>14:    ST  0,     -1(5) store return --gcd--ret-addr--
+	</UL>
+	
+	</p>
+
+        <p>If a ST operation is performed for a memory location that already contains this extra information, then it is unlikely that this subsequent value will have the same meaning as the previous value. For this reason, if a ST operation has no information encoded in its comment, then the current information is cleared.</p>
+	
+	<h4>Instruction Memory</h4>
+	
+	<p>This area displays the instruction memory (imem) where the set of machine instructions that constitute the program are stored. The arrow at the left of a record indicates that this is where the program counter currently points. The program counter always points to the next instruction to be executed. By checking the "Follow PC" box the scrolled window will be centered at the current value of the program counter.</p>
+	
+	<p>The layout of each record is as follows: the first column indicates the instruction memory address and the second column holds the type of machine instruction contained at this address. The next three columns are the operands for the machine instruction. In the case of a RO (register only) instruction, the columns from left to right correspond to the operands r, s and t (as described in [<a href="#references">1</a>] p455). In the case of a RM (register memory) instruction, the columns from left to right correspond to r, d and s. The final column displays the comment that may be associated with an instruction.</p>
+	
+	<h3>Contact</h3>
+	
+	<p>I can be contacted through email at
+
+<script type='text/javascript'>var a = new Array('.dh','@','gmail.com','white');document.write("<a href='mailto:"+a[3]+a[0]+a[1]+a[2]+"'>"+a[3]+a[0]+a[1]+a[2]+"</a>");</script><noscript>[Sorry, please enable javascript to see my email address]</noscript>.</p>
+
+        <h3>References</h3>
+        <a name="references"></a>
+
+        <p>[1] <a href="http://www.cs.sjsu.edu/~louden/cmptext/">Louden, K.C. - Compiler Construction, 1997</a></p>
+
+  <!-- end #mainContent --></div>
+	<!-- This clearing element should immediately follow the #mainContent div in order to force the #container div to contain all child floats --><br class="clearfloat" />
+<!-- end #container --></div>
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+TM Visual Simulator - Version History
+
+0.12
+Improvements to the HTML documentation
+
+0.11
+Machine instructions in tm code file can now contain tabs in addition to spaces.
+Improved error messages relating to reading in a tm code file
+
+0.10
+Initial Release

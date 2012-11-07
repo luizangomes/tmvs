@@ -1,0 +1,78 @@
+  0:     LD  6,      0(0) load gp with maxaddress
+  1:    LDA  5,      0(6) copy gp to fp
+  2:     ST  0,      0(0) clear location 0
+  3:    LDA  5,      0(5) set new frame
+  4:    LDA  0,      1(7) load ac with return address
+  5:    LDC  7,     51(0) unconditional jump to function 'main'
+  6:   HALT  0,0,0        program complete
+  7:     ST  0,     -1(5) Begin built-in function definition 'input', store return address
+  8:     IN  0,0,0        input
+  9:     LD  7,     -1(5) End built-in function definition 'input', return to caller
+ 10:     ST  0,     -1(5) Begin built-in function definition 'output', store return address
+ 11:     LD  0,     -2(5) load output value
+ 12:    OUT  0,0,0        output
+ 13:     LD  7,     -1(5) End built-in function definition 'output', return to caller
+ 14:     ST  0,     -1(5) Begin function definition (ID: gcd,4,5), store return address
+ 15:     LD  0,     -3(5) load id valueVar, Int, (ID: v,4,20), size:0, Local, offset:-3
+ 16:     ST  0,     -4(5) op: push left operand
+ 17:    LDC  0,      0(0) load numeric constant
+ 18:     LD  1,     -4(5) op: restore left operand
+ 19:    SUB  0,1,0        op ==
+ 20:    JEQ  0,      2(7) jump if true
+ 21:    LDC  0,      0(0) false case
+ 22:    LDA  7,      1(7) jump to end
+ 23:    LDC  0,      1(0) true case
+ 24:    JEQ  0,      3(7) Jump to else part (+3)
+ 25:     LD  0,     -2(5) load id valueVar, Int, (ID: u,4,13), size:0, Local, offset:-2
+ 26:     LD  7,     -1(5) Return stmt: early return to caller
+ 27:    LDA  7,     22(7) Skip over else part (+22)
+ 28:     LD  0,     -3(5) load id valueVar, Int, (ID: v,4,20), size:0, Local, offset:-3
+ 29:     ST  0,     -6(5) store arg val
+ 30:     LD  0,     -2(5) load id valueVar, Int, (ID: u,4,13), size:0, Local, offset:-2
+ 31:     ST  0,     -7(5) op: push left operand
+ 32:     LD  0,     -2(5) load id valueVar, Int, (ID: u,4,13), size:0, Local, offset:-2
+ 33:     ST  0,     -8(5) op: push left operand
+ 34:     LD  0,     -3(5) load id valueVar, Int, (ID: v,4,20), size:0, Local, offset:-3
+ 35:     LD  1,     -8(5) op: restore left operand
+ 36:    DIV  0,1,0        op /
+ 37:     ST  0,     -8(5) op: push left operand
+ 38:     LD  0,     -3(5) load id valueVar, Int, (ID: v,4,20), size:0, Local, offset:-3
+ 39:     LD  1,     -8(5) op: restore left operand
+ 40:    MUL  0,1,0        op *
+ 41:     LD  1,     -7(5) op: restore left operand
+ 42:    SUB  0,1,0        op -
+ 43:     ST  0,     -7(5) store arg val
+ 44:     ST  5,     -4(5) push old frame pointer into ofp in new frame
+ 45:    LDA  5,     -4(5) set fp to point to new frame
+ 46:    LDA  0,      1(7) load ac with return address
+ 47:    LDC  7,     14(0) jump to function: (ID: gcd,4,5)
+ 48:     LD  5,      0(5) pop frame
+ 49:     LD  7,     -1(5) Return stmt: early return to caller
+ 50:     LD  7,     -1(5) End function definition (ID: gcd,4,5), return to caller
+ 51:     ST  0,     -1(5) Begin function definition (ID: main,11,6), store return address
+ 52:    LDA  0,     -2(5) load id address
+ 53:     ST  0,     -4(5) assign: store address
+ 54:    LDC  0,     15(0) load numeric constant
+ 55:     LD  1,     -4(5) assign: restore address
+ 56:     ST  0,      0(1) assign: store value in ac at address in ac1
+ 57:    LDA  0,     -3(5) load id address
+ 58:     ST  0,     -4(5) assign: store address
+ 59:    LDC  0,     10(0) load numeric constant
+ 60:     LD  1,     -4(5) assign: restore address
+ 61:     ST  0,      0(1) assign: store value in ac at address in ac1
+ 62:     LD  0,     -2(5) load id valueVar, Int, (ID: x,13,7), size:0, Local, offset:-2
+ 63:     ST  0,     -8(5) store arg val
+ 64:     LD  0,     -3(5) load id valueVar, Int, (ID: y,14,7), size:0, Local, offset:-3
+ 65:     ST  0,     -9(5) store arg val
+ 66:     ST  5,     -6(5) push old frame pointer into ofp in new frame
+ 67:    LDA  5,     -6(5) set fp to point to new frame
+ 68:    LDA  0,      1(7) load ac with return address
+ 69:    LDC  7,     14(0) jump to function: (ID: gcd,4,5)
+ 70:     LD  5,      0(5) pop frame
+ 71:     ST  0,     -6(5) store arg val
+ 72:     ST  5,     -4(5) push old frame pointer into ofp in new frame
+ 73:    LDA  5,     -4(5) set fp to point to new frame
+ 74:    LDA  0,      1(7) load ac with return address
+ 75:    LDC  7,     10(0) jump to function: (ID: output,0,0)
+ 76:     LD  5,      0(5) pop frame
+ 77:     LD  7,     -1(5) End function definition (ID: main,11,6), return to caller
