@@ -1,15 +1,14 @@
 module Main where
 
-import System(getArgs)
-import IO
-import Data.Array.IO
+import System.Environment(getArgs)
+import System.IO
+import Data.Array
 import Data.IORef
 import Control.Monad
 import Graphics.UI.Gtk
 import Text.Regex
 
 import Types
-import Array
 import VirtualMachine
 import Constants
 import ReadTMcode

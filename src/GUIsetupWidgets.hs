@@ -1,9 +1,9 @@
 module GUIsetupWidgets where
 
 import Data.IORef
-import Array
-import Graphics.UI.Gtk
+import Data.Array
 import Data.Array.IO
+import Graphics.UI.Gtk
 
 import IOArrayHelpers
 import Types

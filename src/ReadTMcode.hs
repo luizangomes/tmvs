@@ -1,8 +1,9 @@
 module ReadTMcode (readProgramFromFile) where
 
-import Types
 import Text.Regex
 import Control.Monad
+
+import Types
 
 readProgramFromFile fileName = do
     listOfLines <- getLines fileName

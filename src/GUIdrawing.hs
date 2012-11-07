@@ -3,7 +3,7 @@ module GUIdrawing where
 import Data.IORef
 import Graphics.UI.Gtk
 import Data.Array.IO
-import Array
+import Data.Array
 import Text.Printf
 
 import GUItypes

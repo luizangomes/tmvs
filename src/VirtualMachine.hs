@@ -3,10 +3,9 @@ module VirtualMachine where
 import Text.Printf
 import Text.Regex
 import Control.Monad
-
+import Data.Array
 import Debug.Trace
 
-import Array
 import Types
 import Constants
     
