@@ -1,5 +1,8 @@
 TM Visual Simulator - Version History
 
+0.13
+Updated modules for compatability with ghc v7
+
 0.12
 Improvements to the HTML documentation
 
