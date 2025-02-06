@@ -1,4 +1,4 @@
---Copyright 2010 David White
+-- Copyright 2010 David White
 
 --This file is part of Tiny Machine Visual Simulator.
 
@@ -14,8 +14,7 @@
 
 --You should have received a copy of the GNU General Public License
 --along with Tiny Machine Visual Simulator.  If not, see 
---<http://www.gnu.org/licenses/>.
-
+-- <http://www.gnu.org/licenses/>.
 module ReadTMcode (readProgramFromFile) where
 
 import Text.Regex

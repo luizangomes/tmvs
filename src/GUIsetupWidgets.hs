@@ -14,7 +14,8 @@
 
 --You should have received a copy of the GNU General Public License
 --along with Tiny Machine Visual Simulator.  If not, see 
---<http://www.gnu.org/licenses/>.
+-- <http://www.gnu.org/licenses/>.
+{-# LANGUAGE FlexibleContexts #-}
 
 module GUIsetupWidgets where
 
@@ -210,7 +211,7 @@ initRegWidgets = do
                     row = i `mod` 4
                     col = if i<4 then 1 else 3
         createAndAttachLabel regTable str i j = do
-            label <- labelNew Nothing
+            label <- labelNew (Nothing :: Maybe String)
             labelSetText label str
             tableAttach regTable label j (j+1) i (i+1) [] [] 20 0
 
@@ -240,13 +241,13 @@ initControlWidgets = do
     tableAttach controlButtonTable stepXEntry 3 4 1 2 [] [] 0 0
     
     currentStepTextLabel <- labelNew (Just "Step: ")
-    currentStepLabel <- labelNew Nothing
+    currentStepLabel <- labelNew (Nothing :: Maybe String)
     currentStepHbox <- hBoxNew False 0
     boxPackStart currentStepHbox currentStepTextLabel PackNatural 0
     boxPackStart currentStepHbox currentStepLabel PackNatural 0
 
     stepResultTextLabel <- labelNew (Just "Step Result: ")
-    stepResultLabel <- labelNew Nothing
+    stepResultLabel <- labelNew (Nothing :: Maybe String)
     stepResultHbox <- hBoxNew False 0
     boxPackStart stepResultHbox stepResultTextLabel PackNatural 0
     boxPackStart stepResultHbox stepResultLabel PackNatural 0    
@@ -279,7 +280,7 @@ initOutputWidgets = do
     outputScrWin <- scrolledWindowNew Nothing Nothing
     scrolledWindowSetPolicy outputScrWin PolicyAutomatic PolicyAutomatic
 
-    outputLabel <- labelNew Nothing
+    outputLabel <- labelNew (Nothing :: Maybe String)
     labelSetSelectable outputLabel True
     labelSetJustify outputLabel JustifyLeft
 
@@ -293,10 +294,10 @@ initOutputWidgets = do
 
 labelWithFrameNew :: IO (Label,Frame)
 labelWithFrameNew = do
-  label <- labelNew Nothing
-  frame <- frameNew
-  containerAdd frame label
-  return (label, frame)
+    label <- labelNew (Nothing :: Maybe String)
+    frame <- frameNew
+    containerAdd frame label
+    return (label, frame)
 
 attachEntriesToTable table entries startAttachAtCol endAttachAtCol = do
     (iSize,_) <- dim2d entries
