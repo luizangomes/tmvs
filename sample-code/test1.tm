@@ -1,0 +1,20 @@
+* Good If Program
+* ./src/tmvs sample-code/test1.tm 32
+  0:     LD  6,      0(0) 
+  1:     ST  0,      0(0) 
+  2:     IN  0,0,0 
+  3:     ST  0,      0(5) 
+  4:    LDC  0,      1(0) 
+  5:     ST  0,      0(6) 
+  6:     LD  0,      0(5) 
+  7:     LD  1,      0(6) 
+  8:    SUB  0,1,0 
+  9:    JEQ  0,      2(7) 
+ 10:    LDC  0,      0(0) 
+ 11:    LDA  7,      1(7) 
+ 12:    LDC  0,      1(0) 
+ 13:    JEQ  0,      2(7) 
+ 14:     LD  0,      0(5) 
+ 15:    OUT  0,0,0 
+ 16:    LDA  7,      0(7) 
+ 17:   HALT  0,0,0 
